@@ -1,0 +1,25 @@
+{
+  "inn": "7722085341",
+  "reportDate": "2026-10-25",
+  "activeLoans": [
+    {
+      "lender": "Банк 2",
+      "type": "TERM_LOAN",
+      "balance": 4000000,
+      "monthlyPayment": 180000,
+      "openedAt": "2025-01-15"
+    },
+    {
+      "lender": "Банк 4",
+      "type": "CREDIT_LINE",
+      "balance": 2000000,
+      "monthlyPayment": 60000,
+      "openedAt": "2025-08-01"
+    }
+  ],
+  "totalDebt": 6000000,
+  "monthlyDebtPayments": 240000,
+  "overdues": [],
+  "maxOverdueDays24m": 0,
+  "inquiries30d": 2
+}

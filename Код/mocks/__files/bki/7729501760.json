@@ -1,0 +1,24 @@
+{
+  "inn": "7729501760",
+  "reportDate": "2026-10-25",
+  "activeLoans": [
+    {
+      "lender": "Банк 3",
+      "type": "TERM_LOAN",
+      "balance": 4000000,
+      "monthlyPayment": 210000,
+      "openedAt": "2025-12-05"
+    }
+  ],
+  "totalDebt": 4000000,
+  "monthlyDebtPayments": 210000,
+  "overdues": [
+    {
+      "days": 45,
+      "date": "2026-05-20",
+      "closed": true
+    }
+  ],
+  "maxOverdueDays24m": 45,
+  "inquiries30d": 6
+}
