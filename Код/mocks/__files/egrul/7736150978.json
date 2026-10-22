@@ -1,0 +1,23 @@
+{
+  "inn": "7736150978",
+  "ogrn": "1177746281052",
+  "type": "LEGAL",
+  "shortName": "ООО «Старый склад»",
+  "fullName": "Общество с ограниченной ответственностью «Старый склад»",
+  "status": "LIQUIDATED",
+  "registrationDate": "2017-02-10",
+  "okved": {
+    "code": "52.10",
+    "name": "Деятельность по складированию и хранению"
+  },
+  "smeCategory": "MICRO",
+  "director": {
+    "fullName": "Сидоров Олег Павлович",
+    "position": "Ликвидатор"
+  },
+  "address": "г. Москва, ул. Складская, д. 1",
+  "flags": {
+    "massAddress": false,
+    "unreliableInfo": false
+  }
+}

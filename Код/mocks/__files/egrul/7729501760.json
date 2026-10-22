@@ -1,0 +1,23 @@
+{
+  "inn": "7729501760",
+  "ogrn": "1257700384193",
+  "type": "LEGAL",
+  "shortName": "ООО «СтройМаркет»",
+  "fullName": "Общество с ограниченной ответственностью «СтройМаркет»",
+  "status": "ACTIVE",
+  "registrationDate": "2025-11-01",
+  "okved": {
+    "code": "41.20",
+    "name": "Строительство жилых и нежилых зданий"
+  },
+  "smeCategory": "MICRO",
+  "director": {
+    "fullName": "Петров Пётр Петрович",
+    "position": "Генеральный директор"
+  },
+  "address": "г. Москва, ул. Строителей, д. 3",
+  "flags": {
+    "massAddress": false,
+    "unreliableInfo": false
+  }
+}

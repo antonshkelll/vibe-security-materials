@@ -1,0 +1,23 @@
+{
+  "inn": "7703168426",
+  "ogrn": "1227700512764",
+  "type": "LEGAL",
+  "shortName": "ООО «Хлебный двор»",
+  "fullName": "Общество с ограниченной ответственностью «Хлебный двор»",
+  "status": "ACTIVE",
+  "registrationDate": "2022-03-12",
+  "okved": {
+    "code": "10.71",
+    "name": "Производство хлеба и хлебобулочных изделий"
+  },
+  "smeCategory": "MICRO",
+  "director": {
+    "fullName": "Ковалёва Мария Сергеевна",
+    "position": "Генеральный директор"
+  },
+  "address": "г. Москва, ул. Пекарская, д. 7",
+  "flags": {
+    "massAddress": false,
+    "unreliableInfo": false
+  }
+}

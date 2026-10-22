@@ -1,0 +1,23 @@
+{
+  "inn": "7704983159",
+  "ogrn": "1187746198342",
+  "type": "LEGAL",
+  "shortName": "ООО «ТехноПрогресс»",
+  "fullName": "Общество с ограниченной ответственностью «ТехноПрогресс»",
+  "status": "ACTIVE",
+  "registrationDate": "2018-03-15",
+  "okved": {
+    "code": "62.01",
+    "name": "Разработка компьютерного программного обеспечения"
+  },
+  "smeCategory": "SMALL",
+  "director": {
+    "fullName": "Иванов Иван Иванович",
+    "position": "Генеральный директор"
+  },
+  "address": "г. Москва, ул. Программистов, д. 12",
+  "flags": {
+    "massAddress": false,
+    "unreliableInfo": false
+  }
+}

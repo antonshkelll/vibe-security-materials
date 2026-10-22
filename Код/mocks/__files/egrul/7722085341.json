@@ -1,0 +1,23 @@
+{
+  "inn": "7722085341",
+  "ogrn": "1217700446930",
+  "type": "LEGAL",
+  "shortName": "ООО «Северный ветер»",
+  "fullName": "Общество с ограниченной ответственностью «Северный ветер»",
+  "status": "ACTIVE",
+  "registrationDate": "2021-04-20",
+  "okved": {
+    "code": "46.39",
+    "name": "Неспециализированная оптовая торговля пищевыми продуктами"
+  },
+  "smeCategory": "SMALL",
+  "director": {
+    "fullName": "Соколов Андрей Викторович",
+    "position": "Генеральный директор"
+  },
+  "address": "г. Москва, ул. Северная, д. 21",
+  "flags": {
+    "massAddress": false,
+    "unreliableInfo": false
+  }
+}
