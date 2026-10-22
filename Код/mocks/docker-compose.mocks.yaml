@@ -1,0 +1,8 @@
+# Кусок для docker-compose.yaml: вставить в раздел services
+  mocks:
+    image: wiremock/wiremock:3.9.1
+    ports:
+      - "8089:8080"
+    volumes:
+      - ./mocks:/home/wiremock
+    command: ["--verbose"]
