@@ -1,0 +1,157 @@
+{
+  "mappings": [
+    {
+      "priority": 1,
+      "request": {
+        "method": "POST",
+        "url": "/bki/v1/reports",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.inn == '7704983159')]"
+          },
+          {
+            "matchesJsonPath": "$.consentId"
+          }
+        ]
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "bki/7704983159.json"
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "POST",
+        "url": "/bki/v1/reports",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.inn == '7703168426')]"
+          },
+          {
+            "matchesJsonPath": "$.consentId"
+          }
+        ]
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "bki/7703168426.json"
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "POST",
+        "url": "/bki/v1/reports",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.inn == '7729501760')]"
+          },
+          {
+            "matchesJsonPath": "$.consentId"
+          }
+        ]
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "bki/7729501760.json"
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "POST",
+        "url": "/bki/v1/reports",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.inn == '7722085341')]"
+          },
+          {
+            "matchesJsonPath": "$.consentId"
+          }
+        ]
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "bki/7722085341.json",
+        "fixedDelayMilliseconds": 10000
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "POST",
+        "url": "/bki/v1/reports",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.inn == '7731497609')]"
+          },
+          {
+            "matchesJsonPath": "$.consentId"
+          }
+        ]
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "bki/7731497609.json"
+      }
+    },
+    {
+      "priority": 2,
+      "request": {
+        "method": "POST",
+        "url": "/bki/v1/reports",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": {
+              "expression": "$.consentId",
+              "absent": true
+            }
+          }
+        ]
+      },
+      "response": {
+        "status": 403,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "jsonBody": {
+          "code": "CONSENT_REQUIRED",
+          "message": "Нет согласия на запрос кредитной истории"
+        }
+      }
+    },
+    {
+      "priority": 10,
+      "request": {
+        "method": "POST",
+        "url": "/bki/v1/reports"
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "jsonBody": {
+          "code": "NOT_FOUND",
+          "message": "Кредитная история не найдена"
+        }
+      }
+    }
+  ]
+}

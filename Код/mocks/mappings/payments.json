@@ -1,0 +1,22 @@
+{
+  "mappings": [
+    {
+      "priority": 1,
+      "request": {
+        "method": "POST",
+        "url": "/payments/v1/disbursements"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "fixedDelayMilliseconds": 2000,
+        "jsonBody": {
+          "paymentId": "pay-0001",
+          "status": "COMPLETED"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "mappings": [
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "url": "/bank/v1/clients/7704983159"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "bank/7704983159.json"
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "url": "/bank/v1/clients/7703168426"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "bank/7703168426.json"
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "url": "/bank/v1/clients/7729501760"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "bank/7729501760.json"
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "url": "/bank/v1/clients/7722085341"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "bank/7722085341.json"
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "url": "/bank/v1/clients/7731497609"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "bank/7731497609.json"
+      }
+    },
+    {
+      "priority": 10,
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/bank/v1/clients/[0-9]+"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "jsonBody": {
+          "isClient": false,
+          "clientSince": null,
+          "relationshipMonths": 0,
+          "avgMonthlyInflow": 0,
+          "monthlyInflows": []
+        }
+      }
+    }
+  ]
+}

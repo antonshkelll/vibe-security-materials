@@ -1,0 +1,105 @@
+{
+  "mappings": [
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "url": "/egrul/v1/companies/7704983159"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "egrul/7704983159.json"
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "url": "/egrul/v1/companies/7703168426"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "egrul/7703168426.json"
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "url": "/egrul/v1/companies/7729501760"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "egrul/7729501760.json"
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "url": "/egrul/v1/companies/7722085341"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "egrul/7722085341.json"
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "url": "/egrul/v1/companies/7731497609"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "egrul/7731497609.json"
+      }
+    },
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "url": "/egrul/v1/companies/7736150978"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "bodyFileName": "egrul/7736150978.json"
+      }
+    },
+    {
+      "priority": 10,
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/egrul/v1/companies/[0-9]+"
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "jsonBody": {
+          "code": "NOT_FOUND",
+          "message": "Компания с таким ИНН не найдена"
+        }
+      }
+    }
+  ]
+}
