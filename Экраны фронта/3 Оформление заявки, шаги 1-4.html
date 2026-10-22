@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Оформление заявки · Кредитный кабинет</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#0A0A0A',
+          card: '#141414',
+          cardHover: '#1C1C1C',
+          border: '#262626',
+          accent: '#EF3124',
+          accentHover: '#D62A1F',
+          muted: '#8A8A8A',
+          soft: '#A0A0A0',
+          success: '#22C55E',
+          warning: '#F59E0B'
+        },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+          display: ['Space Grotesk', 'Inter', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; background: #0A0A0A; color: #fff; }
+  .display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    background: transparent; cursor: pointer; width: 100%;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px; background: #262626; border-radius: 999px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    height: 22px; width: 22px; border-radius: 50%;
+    background: #EF3124; border: 3px solid #0A0A0A;
+    margin-top: -8px; box-shadow: 0 0 0 2px #EF3124;
+  }
+  .chip { transition: all .15s ease; }
+  .chip.active { background: #fff; color: #0A0A0A; border-color: #fff; }
+  .step-dot { transition: all .3s ease; }
+  .step-dot.active { background: #EF3124; border-color: #EF3124; }
+  .step-dot.done { background: #22C55E; border-color: #22C55E; }
+  .step-line { transition: background .3s ease; }
+  .step-line.done { background: #22C55E; }
+  .fade-in { animation: fadeIn .25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .spinner {
+    width: 20px; height: 20px; border: 2px solid #262626;
+    border-top-color: #EF3124; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- HEADER -->
+<header class="border-b border-border sticky top-0 bg-bg/80 backdrop-blur-xl z-50">
+  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-10">
+      <div class="w-9 h-9 bg-accent rounded-md flex items-center justify-center font-display font-bold text-white text-xl">А</div>
+      <nav class="hidden md:flex items-center gap-7 text-sm text-soft">
+        <a href="index.html" class="hover:text-white transition">Главная</a>
+        <a href="#" class="text-white">Кредиты</a>
+        <a href="#" class="hover:text-white transition">Заявки</a>
+        <a href="#" class="hover:text-white transition">Деньги бизнеса</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="hidden sm:flex items-center gap-2 text-sm text-soft">
+        <div class="w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center text-xs font-semibold">ХД</div>
+        <span>ООО «Хлебный двор»</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- PROGRESS BAR -->
+<div class="max-w-6xl mx-auto px-6 pt-10 pb-6">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <div class="text-xs uppercase tracking-wider text-muted mb-1">Оформление заявки</div>
+      <h1 class="display text-3xl md:text-4xl font-bold" id="stepTitle">Шаг 1 из 4</h1>
+    </div>
+    <div class="hidden md:block text-sm text-soft" id="stepSubtitle">Введите ИНН компании</div>
+  </div>
+  <div class="flex items-center gap-2">
+    <div class="step-dot active w-3 h-3 rounded-full border-2 border-border" data-step="1"></div>
+    <div class="step-line flex-1 h-0.5 bg-border" data-line="1"></div>
+    <div class="step-dot w-3 h-3 rounded-full border-2 border-border" data-step="2"></div>
+    <div class="step-line flex-1 h-0.5 bg-border" data-line="2"></div>
+    <div class="step-dot w-3 h-3 rounded-full border-2 border-border" data-step="3"></div>
+    <div class="step-line flex-1 h-0.5 bg-border" data-line="3"></div>
+    <div class="step-dot w-3 h-3 rounded-full border-2 border-border" data-step="4"></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="max-w-6xl mx-auto px-6 pb-20">
+
+  <!-- ШАГ 1: ИНН -->
+  <section id="step1" class="fade-in">
+    <div class="grid lg:grid-cols-5 gap-6">
+      <div class="lg:col-span-3 bg-card border border-border rounded-3xl p-8">
+        <div class="mb-6">
+          <div class="inline-flex items-center gap-2 bg-accent/10 text-accent rounded-full px-3 py-1 text-xs font-semibold mb-4">
+            <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+            Умный старт
+          </div>
+          <h2 class="display text-2xl font-bold mb-2">Введите ИНН или ОГРН компании</h2>
+          <p class="text-soft">Остальное подтянем сами из ЕГРЮЛ и ФНС. Это займёт пару секунд.</p>
+        </div>
+
+        <div class="mb-6">
+          <label class="text-xs uppercase tracking-wider text-muted mb-2 block">ИНН / ОГРН</label>
+          <input id="innInput" type="text" value="7712345678" maxlength="12"
+            class="w-full bg-bg border border-border rounded-xl px-5 py-4 text-xl font-display font-bold focus:outline-none focus:border-accent transition" />
+          <div class="flex items-center gap-2 mt-3 text-sm" id="innStatus">
+            <span class="w-2 h-2 rounded-full bg-success"></span>
+            <span class="text-success">ИНН найден в ЕГРЮЛ</span>
+          </div>
+          <p class="text-xs text-muted mt-3">Если сервис ФНС не отвечает, данные можно ввести вручную — заявка не потеряется.</p>
+        </div>
+
+        <div class="flex gap-3">
+          <button id="btnNext1" class="bg-accent hover:bg-accentHover text-white font-semibold px-7 py-3.5 rounded-xl transition flex items-center gap-2">
+            <span id="btnNext1Text">Всё верно, дальше</span>
+            <span id="btnNext1Spinner" class="spinner hidden"></span>
+          </button>
+          <button class="bg-card hover:bg-cardHover border border-border text-white font-semibold px-7 py-3.5 rounded-xl transition">
+            Исправить вручную
+          </button>
+        </div>
+      </div>
+
+      <!-- Карточка компании -->
+      <div class="lg:col-span-2">
+        <div class="bg-card border border-border rounded-3xl p-6 sticky top-24">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs text-muted uppercase tracking-wider">Данные компании</span>
+            <span class="text-xs text-success font-semibold flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+              Действующая
+            </span>
+          </div>
+          <div class="display text-xl font-bold mb-5">ООО «Хлебный двор»</div>
+
+          <div class="space-y-4">
+            <div class="flex justify-between items-start gap-4 pb-4 border-b border-border">
+              <div class="text-xs text-muted">ОГРН</div>
+              <div class="text-sm font-medium text-right">1167746123456</div>
+            </div>
+            <div class="flex justify-between items-start gap-4 pb-4 border-b border-border">
+              <div class="text-xs text-muted">Руководитель</div>
+              <div class="text-sm font-medium text-right">Ковалёва Мария Сергеевна</div>
+            </div>
+            <div class="flex justify-between items-start gap-4 pb-4 border-b border-border">
+              <div class="text-xs text-muted">ОКВЭД</div>
+              <div class="text-sm font-medium text-right">10.71 · Производство хлеба и хлебобулочных изделий</div>
+            </div>
+            <div class="flex justify-between items-start gap-4 pb-4 border-b border-border">
+              <div class="text-xs text-muted">Зарегистрирована</div>
+              <div class="text-sm font-medium text-right">12.03.2022 <span class="text-muted">(4 года)</span></div>
+            </div>
+            <div class="flex justify-between items-start gap-4">
+              <div class="text-xs text-muted">Категория</div>
+              <div class="text-sm font-medium text-right">Микропредприятие</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ШАГ 2: ВЫБОР ПРОДУКТА -->
+  <section id="step2" class="hidden fade-in">
+    <div class="grid lg:grid-cols-5 gap-6">
+      <div class="lg:col-span-3">
+        <div class="bg-card border border-border rounded-3xl p-8 mb-6">
+          <h2 class="display text-2xl font-bold mb-2">На что нужны деньги?</h2>
+          <p class="text-soft mb-6">Выберите цель — подберём подходящий продукт</p>
+
+          <div class="flex flex-wrap gap-2 mb-6" id="goals">
+            <button class="chip active border border-border rounded-full px-4 py-2.5 text-sm" data-goal="Оборот">Закупка товара</button>
+            <button class="chip border border-border rounded-full px-4 py-2.5 text-sm" data-goal="Кассовый разрыв">Кассовый разрыв</button>
+            <button class="chip border border-border rounded-full px-4 py-2.5 text-sm" data-goal="Оборудование">Оборудование</button>
+            <button class="chip border border-border rounded-full px-4 py-2.5 text-sm" data-goal="Госконтракт">Госконтракт</button>
+            <button class="chip border border-border rounded-full px-4 py-2.5 text-sm" data-goal="Ремонт">Ремонт, новая точка</button>
+            <button class="chip border border-border rounded-full px-4 py-2.5 text-sm" data-goal="Рефинансирование">Рефинансирование</button>
+          </div>
+
+          <button class="text-sm text-accent font-semibold hover:underline flex items-center gap-2">
+            Не знаю, что выбрать — пройти квиз
+            <span>→</span>
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between mb-4">
+          <div class="text-sm text-soft">Подходит <span class="text-white font-semibold">3 продукта</span></div>
+          <button class="text-sm text-soft hover:text-white transition">Сортировка: по переплате ▾</button>
+        </div>
+
+        <div class="space-y-3" id="productsList">
+          <!-- Карточки продуктов генерируются JS -->
+        </div>
+      </div>
+
+      <!-- Правая панель: выбранное -->
+      <div class="lg:col-span-2">
+        <div class="bg-card border border-border rounded-3xl p-6 sticky top-24" id="selectedProduct">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs text-accent font-semibold uppercase tracking-wider">Выбрано</span>
+            <button class="text-xs text-soft hover:text-white">Сравнить</button>
+          </div>
+          <h3 class="display text-2xl font-bold mb-1" id="selName">Оборотный кредит</h3>
+          <p class="text-sm text-soft mb-5" id="selDesc">Лучше всего под закупку товара</p>
+
+          <div class="grid grid-cols-3 gap-3 mb-5">
+            <div class="bg-bg rounded-xl p-3">
+              <div class="text-xs text-muted mb-1">Ставка</div>
+              <div class="display text-lg font-bold" id="selRate">от 22%</div>
+            </div>
+            <div class="bg-bg rounded-xl p-3">
+              <div class="text-xs text-muted mb-1">Сумма</div>
+              <div class="display text-lg font-bold" id="selMax">до 30 млн</div>
+            </div>
+            <div class="bg-bg rounded-xl p-3">
+              <div class="text-xs text-muted mb-1">Срок</div>
+              <div class="display text-lg font-bold" id="selTerm">3–36 мес.</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mb-5" id="selTags">
+            <span class="text-xs bg-bg border border-border rounded-full px-3 py-1 text-soft">Без залога</span>
+            <span class="text-xs bg-bg border border-border rounded-full px-3 py-1 text-soft">Онлайн</span>
+          </div>
+
+          <div class="bg-bg rounded-xl p-4 mb-5">
+            <div class="flex justify-between text-sm mb-1.5">
+              <span class="text-muted">Платёж в месяц</span>
+              <span class="font-semibold" id="selPayment">≈ 157 100 ₽</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-muted">Переплата</span>
+              <span class="font-semibold" id="selOverpay">≈ 770 800 ₽</span>
+            </div>
+          </div>
+
+          <button id="btnNext2" class="w-full bg-accent hover:bg-accentHover text-white font-semibold py-3.5 rounded-xl transition">
+            Продолжить
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ШАГ 3: ПАРАМЕТРЫ И ЦЕНА -->
+  <section id="step3" class="hidden fade-in">
+    <div class="grid lg:grid-cols-5 gap-6">
+      <div class="lg:col-span-3 space-y-6">
+        <!-- Сумма и срок -->
+        <div class="bg-card border border-border rounded-3xl p-8">
+          <h2 class="display text-2xl font-bold mb-6">Сколько и на какой срок</h2>
+
+          <div class="mb-8">
+            <div class="flex items-end justify-between mb-3">
+              <div class="text-xs uppercase tracking-wider text-muted">Сумма</div>
+              <div class="display text-3xl font-bold" id="amountValue">3 000 000 ₽</div>
+            </div>
+            <input type="range" id="amount" min="100000" max="30000000" step="100000" value="3000000" />
+            <div class="flex justify-between text-xs text-muted mt-2">
+              <span>100 тыс. ₽</span><span>30 млн ₽</span>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <div class="flex items-end justify-between mb-3">
+              <div class="text-xs uppercase tracking-wider text-muted">Срок</div>
+              <div class="display text-3xl font-bold" id="termValue">24 мес.</div>
+            </div>
+            <input type="range" id="term" min="1" max="60" step="1" value="24" />
+            <div class="flex justify-between text-xs text-muted mt-2">
+              <span>1 мес.</span><span>60 мес.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Согласия -->
+        <div class="bg-card border border-border rounded-3xl p-8">
+          <h2 class="display text-xl font-bold mb-5">Согласия</h2>
+          <div class="space-y-4">
+            <label class="flex items-start gap-4 p-4 bg-bg border border-border rounded-xl cursor-pointer hover:border-soft transition">
+              <input type="checkbox" checked class="w-5 h-5 accent-[#EF3124] mt-0.5">
+              <div>
+                <div class="font-medium mb-1">Согласен на запрос в бюро кредитных историй</div>
+                <div class="text-xs text-muted">Действует 1 год. Нужно для оценки риска.</div>
+              </div>
+            </label>
+            <label class="flex items-start gap-4 p-4 bg-bg border border-border rounded-xl cursor-pointer hover:border-soft transition">
+              <input type="checkbox" checked class="w-5 h-5 accent-[#EF3124] mt-0.5">
+              <div>
+                <div class="font-medium mb-1">Согласен на обработку персональных данных</div>
+                <div class="text-xs text-muted">Для формирования заявки и проверки данных.</div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Правая панель: цена -->
+      <div class="lg:col-span-2">
+        <div class="bg-card border border-border rounded-3xl p-6 sticky top-24">
+          <div class="flex items-center justify-between mb-5">
+            <span class="text-xs text-muted uppercase tracking-wider">Сколько это стоит</span>
+          </div>
+
+          <!-- Переключатель опции -->
+          <div class="bg-bg border border-border rounded-xl p-4 mb-5">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <div class="font-semibold text-sm">«Защита бизнеса»</div>
+                <div class="text-xs text-muted">Снижает ставку на 3,5%</div>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="optionToggle" class="sr-only peer">
+                <div class="w-11 h-6 bg-border rounded-full peer peer-checked:bg-accent transition"></div>
+                <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition peer-checked:translate-x-5"></div>
+              </label>
+            </div>
+            <div class="text-xs text-muted">Стоимость опции — 60 000 ₽. Можно не подключать: на решение это не влияет.</div>
+          </div>
+
+          <!-- Сравнение -->
+          <div class="grid grid-cols-2 gap-3 mb-5">
+            <div class="bg-bg rounded-xl p-4 border border-border">
+              <div class="text-xs text-muted mb-3">Без опции</div>
+              <div class="space-y-2.5 text-sm">
+                <div class="flex justify-between"><span class="text-muted">Ставка</span><span class="font-semibold" id="rateNo">23%</span></div>
+                <div class="flex justify-between"><span class="text-muted">Платёж</span><span class="font-semibold" id="pmtNo">157 100 ₽</span></div>
+                <div class="flex justify-between"><span class="text-muted">Вернёте</span><span class="font-semibold" id="totalNo">3 770 800 ₽</span></div>
+                <div class="flex justify-between pt-2 border-t border-border"><span class="text-muted">ПСК</span><span class="font-semibold" id="pskNo">25,6%</span></div>
+              </div>
+            </div>
+            <div class="bg-bg rounded-xl p-4 border border-accent/30 relative">
+              <div class="absolute -top-2 right-3 text-[10px] bg-accent text-white px-2 py-0.5 rounded-full font-semibold">ВЫГОДНЕЕ</div>
+              <div class="text-xs text-accent font-semibold mb-3">С опцией</div>
+              <div class="space-y-2.5 text-sm">
+                <div class="flex justify-between"><span class="text-muted">Ставка</span><span class="font-semibold" id="rateYes">19,5%</span></div>
+                <div class="flex justify-between"><span class="text-muted">Платёж</span><span class="font-semibold" id="pmtYes">152 000 ₽</span></div>
+                <div class="flex justify-between"><span class="text-muted">Вернёте</span><span class="font-semibold" id="totalYes">3 708 000 ₽</span></div>
+                <div class="flex justify-between pt-2 border-t border-border"><span class="text-muted">ПСК</span><span class="font-semibold" id="pskYes">23,1%</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-xs text-muted mb-5">Цифры условные, для макета. Опцию можно не подключать: на решение это не влияет.</div>
+
+          <div class="flex gap-3">
+            <button id="btnBack3" class="flex-1 bg-card hover:bg-cardHover border border-border text-white font-semibold py-3.5 rounded-xl transition">Назад</button>
+            <button id="btnNext3" class="flex-[2] bg-accent hover:bg-accentHover text-white font-semibold py-3.5 rounded-xl transition">Отправить заявку</button>
+          </div>
+          <div class="text-center mt-3 text-xs text-muted">Черновик сохранён</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ШАГ 4: ОТПРАВЛЕНО -->
+  <section id="step4" class="hidden fade-in">
+    <div class="max-w-3xl mx-auto">
+      <div class="bg-card border border-border rounded-3xl p-10 text-center">
+        <div class="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-6">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2 class="display text-3xl font-bold mb-3">Заявка отправлена</h2>
+        <p class="text-soft mb-8">Номер заявки: <span class="text-white font-semibold">2026-0147</span></p>
+
+        <div class="bg-bg rounded-2xl p-6 mb-8 text-left">
+          <div class="text-xs text-muted uppercase tracking-wider mb-4">Что происходит сейчас</div>
+          <div class="space-y-4">
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-full bg-success flex items-center justify-center flex-shrink-0">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div>
+                <div class="font-medium mb-0.5">Данные ЕГРЮЛ и ФНС подтверждены</div>
+                <div class="text-xs text-muted">14:04 · автоматически</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
+                <div class="spinner" style="border-color: rgba(255,255,255,0.2); border-top-color: #fff;"></div>
+              </div>
+              <div>
+                <div class="font-medium mb-0.5">Сейчас заявку смотрит специалист Анна К.</div>
+                <div class="text-xs text-muted">Решение — до 14:20. Ответ придёт сюда и в ленту.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-4 opacity-40">
+              <div class="w-8 h-8 rounded-full bg-border flex items-center justify-center flex-shrink-0 text-xs font-semibold">3</div>
+              <div>
+                <div class="font-medium mb-0.5">Решение по заявке</div>
+                <div class="text-xs text-muted">Ожидает завершения проверки</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 justify-center">
+          <button class="bg-accent hover:bg-accentHover text-white font-semibold px-7 py-3.5 rounded-xl transition">Перейти к заявке</button>
+          <button class="bg-card hover:bg-cardHover border border-border text-white font-semibold px-7 py-3.5 rounded-xl transition">На главную</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // ============ ДАННЫЕ ПРОДУКТОВ ============
+  const products = {
+    'Оборот': {
+      name: 'Оборотный кредит', desc: 'Лучше всего под закупку товара',
+      rate: 0.22, rateText: 'от 22%', max: 'до 30 млн', term: '3–36 мес.',
+      tags: ['Без залога', 'Онлайн'],
+      recommended: true
+    },
+    'Кассовый разрыв': {
+      name: 'Овердрафт', desc: 'Для краткосрочных кассовых разрывов',
+      rate: 0.24, rateText: 'от 24%', max: 'до 5 млн', term: 'до 12 мес.',
+      tags: ['Без залога', 'Возобновляемый'],
+      recommended: false
+    },
+    'Оборудование': {
+      name: 'Инвестиционный кредит', desc: 'На покупку оборудования и транспорта',
+      rate: 0.20, rateText: 'от 20%', max: 'до 100 млн', term: 'до 84 мес.',
+      tags: ['С залогом'],
+      recommended: false
+    },
+    'Госконтракт': {
+      name: 'Кредит с господдержкой', desc: 'Поручительство Корпорации МСП',
+      rate: 0.195, rateText: 'от 19,5%', max: 'до 50 млн', term: 'до 36 мес.',
+      tags: ['Без залога', 'Госпрограмма'],
+      recommended: false
+    },
+    'Ремонт': {
+      name: 'Инвестиционный кредит', desc: 'На ремонт и открытие новой точки',
+      rate: 0.21, rateText: 'от 21%', max: 'до 30 млн', term: 'до 60 мес.',
+      tags: ['С залогом'],
+      recommended: false
+    },
+    'Рефинансирование': {
+      name: 'Рефинансирование', desc: 'Объедините кредиты в один платёж',
+      rate: 0.18, rateText: 'от 18%', max: 'до 30 млн', term: 'до 60 мес.',
+      tags: ['Онлайн'],
+      recommended: false
+    }
+  };
+
+  const allProducts = [
+    { key: 'Оборот', name: 'Оборотный кредит', desc: 'Лучше всего под закупку товара и пополнение оборотных средств', rateText: 'от 22%', max: 'до 30 млн', term: '3–36 мес.', tags: ['Без залога', 'Онлайн'], recommended: true },
+    { key: 'Кассовый разрыв', name: 'Овердрафт', desc: 'Для краткосрочных кассовых разрывов. Проценты только за дни использования', rateText: 'от 24%', max: 'до 5 млн', term: 'до 12 мес.', tags: ['Без залога', 'Возобновляемый'], recommended: false },
+    { key: 'Госконтракт', name: 'Кредит с господдержкой', desc: 'Корпорация МСП поручается за часть кредита, залог не нужен', rateText: 'от 19,5%', max: 'до 50 млн', term: 'до 36 мес.', tags: ['Без залога', 'Госпрограмма'], recommended: false }
+  ];
+
+  let currentStep = 1;
+  let selectedGoal = 'Оборот';
+  let withOption = false;
+
+  // ============ НАВИГАЦИЯ МЕЖДУ ШАГАМИ ============
+  function goToStep(n) {
+    document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+    document.getElementById('step' + n).classList.remove('hidden');
+    currentStep = n;
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateProgress() {
+    const titles = { 1: 'Шаг 1 из 4', 2: 'Шаг 2 из 4', 3: 'Шаг 3 из 4', 4: 'Заявка отправлена' };
+    const subtitles = { 1: 'Введите ИНН компании', 2: 'Выберите продукт', 3: 'Параметры и цена', 4: '' };
+    document.getElementById('stepTitle').textContent = titles[currentStep];
+    document.getElementById('stepSubtitle').textContent = subtitles[currentStep];
+
+    for (let i = 1; i <= 4; i++) {
+      const dot = document.querySelector(`[data-step="${i}"]`);
+      dot.classList.remove('active', 'done');
+      if (i < currentStep) dot.classList.add('done');
+      else if (i === currentStep) dot.classList.add('active');
+    }
+    for (let i = 1; i <= 3; i++) {
+      const line = document.querySelector(`[data-line="${i}"]`);
+      line.classList.toggle('done', i < currentStep);
+    }
+  }
+
+  // ============ ШАГ 1: ИНН ============
+  document.getElementById('btnNext1').addEventListener('click', () => {
+    const btn = document.getElementById('btnNext1Text');
+    const spinner = document.getElementById('btnNext1Spinner');
+    btn.textContent = 'Проверяем в ЕГРЮЛ...';
+    spinner.classList.remove('hidden');
+    setTimeout(() => {
+      btn.textContent = 'Всё верно, дальше';
+      spinner.classList.add('hidden');
+      goToStep(2);
+    }, 900);
+  });
+
+  // ============ ШАГ 2: ПРОДУКТЫ ============
+  function renderProducts() {
+    const list = document.getElementById('productsList');
+    list.innerHTML = allProducts.map(p => `
+      <div class="bg-card border ${p.key === selectedGoal ? 'border-accent' : 'border-border'} rounded-2xl p-6 hover:border-soft transition cursor-pointer" data-prod="${p.key}">
+        <div class="flex items-start justify-between gap-4 mb-3">
+          <div>
+            ${p.recommended ? '<div class="inline-block text-[10px] bg-accent text-white px-2 py-0.5 rounded-full font-semibold mb-2">РЕКОМЕНДУЕМ</div>' : ''}
+            <h3 class="display text-xl font-bold">${p.name}</h3>
+            <p class="text-sm text-soft mt-1">${p.desc}</p>
+          </div>
+          <div class="text-right flex-shrink-0">
+            <div class="display text-xl font-bold text-accent">${p.max}</div>
+            <div class="text-xs text-soft">${p.term}</div>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 mb-4">
+          ${p.tags.map(t => `<span class="text-xs bg-bg border border-border rounded-full px-3 py-1 text-soft">${t}</span>`).join('')}
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-soft">${p.rateText} · платёж от 157 100 ₽/мес</div>
+          <button class="bg-white text-bg font-semibold px-5 py-2 rounded-lg hover:bg-gray-200 transition text-sm">Выбрать</button>
+        </div>
+      </div>
+    `).join('');
+
+    list.querySelectorAll('[data-prod]').forEach(el => {
+      el.addEventListener('click', () => {
+        selectedGoal = el.dataset.prod;
+        renderProducts();
+        updateSelectedPanel();
+      });
+    });
+  }
+
+  function updateSelectedPanel() {
+    const p = products[selectedGoal];
+    document.getElementById('selName').textContent = p.name;
+    document.getElementById('selDesc').textContent = p.desc;
+    document.getElementById('selRate').textContent = p.rateText;
+    document.getElementById('selMax').textContent = p.max;
+    document.getElementById('selTerm').textContent = p.term;
+    document.getElementById('selTags').innerHTML = p.tags.map(t =>
+      `<span class="text-xs bg-bg border border-border rounded-full px-3 py-1 text-soft">${t}</span>`
+    ).join('');
+    recalc();
+  }
+
+  document.querySelectorAll('#goals .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#goals .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      selectedGoal = chip.dataset.goal;
+      updateSelectedPanel();
+    });
+  });
+
+  document.getElementById('btnNext2').addEventListener('click', () => goToStep(3));
+
+  // ============ ШАГ 3: ПАРАМЕТРЫ ============
+  const amount = document.getElementById('amount');
+  const term = document.getElementById('term');
+  const amountValue = document.getElementById('amountValue');
+  const termValue = document.getElementById('termValue');
+
+  const fmt = n => new Intl.NumberFormat('ru-RU').format(Math.round(n)) + ' ₽';
+
+  function recalc() {
+    const a = +amount.value;
+    const t = +term.value;
+    amountValue.textContent = fmt(a);
+    termValue.textContent = t + ' мес.';
+
+    const p = products[selectedGoal];
+    const rate = withOption ? p.rate - 0.035 : p.rate;
+    const monthly = rate / 12;
+    const pmt = a * monthly / (1 - Math.pow(1 + monthly, -t));
+    const total = pmt * t;
+    const overpay = total - a;
+
+    document.getElementById('selPayment').textContent = '≈ ' + fmt(pmt);
+    document.getElementById('selOverpay').textContent = '≈ ' + fmt(overpay);
+
+    // Без опции (ставка +3.5%)
+    const rateNo = rate + 0.035;
+    const monthlyNo = rateNo / 12;
+    const pmtNo = a * monthlyNo / (1 - Math.pow(1 + monthlyNo, -t));
+    const totalNo = pmtNo * t;
+
+    document.getElementById('rateNo').textContent = ((rateNo * 100).toFixed(1)) + '%';
+    document.getElementById('pmtNo').textContent = fmt(pmtNo);
+    document.getElementById('totalNo').textContent = fmt(totalNo);
+    document.getElementById('pskNo').textContent = ((rateNo * 100 + 2.6).toFixed(1)) + '%';
+
+    document.getElementById('rateYes').textContent = ((rate * 100).toFixed(1)) + '%';
+    document.getElementById('pmtYes').textContent = fmt(pmt);
+    document.getElementById('totalYes').textContent = fmt(total);
+    document.getElementById('pskYes').textContent = ((rate * 100 + 2.6).toFixed(1)) + '%';
+  }
+
+  amount.addEventListener('input', recalc);
+  term.addEventListener('input', recalc);
+
+  document.getElementById('optionToggle').addEventListener('change', (e) => {
+    withOption = e.target.checked;
+    recalc();
+  });
+
+  document.getElementById('btnBack3').addEventListener('click', () => goToStep(2));
+  document.getElementById('btnNext3').addEventListener('click', () => goToStep(4));
+
+  // ============ INIT ============
+  renderProducts();
+  updateSelectedPanel();
+  updateProgress();
+</script>
+
+</body>
+</html>

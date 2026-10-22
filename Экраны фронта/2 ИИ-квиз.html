@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ИИ-помощник · Подбор кредита</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#0A0A0A',
+          card: '#141414',
+          cardHover: '#1C1C1C',
+          border: '#262626',
+          accent: '#EF3124',
+          accentHover: '#D62A1F',
+          muted: '#8A8A8A',
+          soft: '#A0A0A0',
+          success: '#22C55E',
+          warning: '#F59E0B',
+          info: '#3B82F6'
+        },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+          display: ['Space Grotesk', 'Inter', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; background: #0A0A0A; color: #fff; }
+  .display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+  .fade-in { animation: fadeIn .3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .typing { animation: typing 1.5s infinite; }
+  @keyframes typing { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+  .option-btn { transition: all .15s ease; }
+  .option-btn:hover { border-color: #EF3124; background: #1a1a1a; }
+  .option-btn.selected { border-color: #EF3124; background: #1a1a1a; }
+  .chat-bubble { animation: slideIn .3s ease; }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    background: transparent; cursor: pointer; width: 100%;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px; background: #262626; border-radius: 999px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    height: 22px; width: 22px; border-radius: 50%;
+    background: #EF3124; border: 3px solid #0A0A0A;
+    margin-top: -8px; box-shadow: 0 0 0 2px #EF3124;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- HEADER -->
+<header class="border-b border-border sticky top-0 bg-bg/80 backdrop-blur-xl z-50">
+  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-10">
+      <div class="w-9 h-9 bg-accent rounded-md flex items-center justify-center font-display font-bold text-white text-xl">А</div>
+      <nav class="hidden md:flex items-center gap-7 text-sm text-soft">
+        <a href="index.html" class="hover:text-white transition">Главная</a>
+        <a href="#" class="hover:text-white transition">Кредиты</a>
+        <a href="#" class="hover:text-white transition">Заявки</a>
+        <a href="#" class="hover:text-white transition">Деньги бизнеса</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="hidden sm:flex items-center gap-2 text-sm text-soft">
+        <div class="w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center text-xs font-semibold">ХД</div>
+        <span>ООО «Хлебный двор»</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="max-w-3xl mx-auto px-6 py-12">
+
+  <!-- Заголовок -->
+  <div class="mb-8 text-center">
+    <div class="inline-flex items-center gap-2 bg-accent/10 text-accent rounded-full px-4 py-1.5 text-xs font-semibold mb-4">
+      <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      ИИ-помощник
+    </div>
+    <h1 class="display text-3xl md:text-4xl font-bold mb-2">Подберём кредит под вашу задачу</h1>
+    <p class="text-soft">Ответьте на 4 вопроса — это займёт минуту</p>
+  </div>
+
+  <!-- Чат-интерфейс -->
+  <div class="bg-card border border-border rounded-3xl p-8 mb-6">
+    <div id="chatContainer" class="space-y-6">
+      <!-- Сообщения будут добавляться здесь -->
+    </div>
+  </div>
+
+  <!-- Прогресс -->
+  <div class="flex items-center justify-between text-sm">
+    <div class="text-soft">Вопрос <span id="currentQ" class="text-white font-semibold">1</span> из 4</div>
+    <button id="skipBtn" class="text-soft hover:text-white transition">Пропустить квиз →</button>
+  </div>
+
+</main>
+
+<script>
+  const chatContainer = document.getElementById('chatContainer');
+  const currentQEl = document.getElementById('currentQ');
+  const skipBtn = document.getElementById('skipBtn');
+
+  let currentStep = 0;
+  let answers = {
+    goal: null,
+    amount: 3000000,
+    term: 24,
+    collateral: null
+  };
+
+  // Данные продуктов
+  const products = {
+    'Оборот': {
+      name: 'Оборотный кредит',
+      desc: 'Лучше всего под закупку товара и пополнение оборотных средств',
+      rate: 'от 22%',
+      max: 'до 30 млн',
+      term: '3–36 мес.',
+      tags: ['Без залога', 'Онлайн'],
+      payment: '157 100',
+      overpay: '770 800'
+    },
+    'Кассовый разрыв': {
+      name: 'Овердрафт',
+      desc: 'Для краткосрочных кассовых разрывов. Проценты только за дни использования',
+      rate: 'от 24%',
+      max: 'до 5 млн',
+      term: 'до 12 мес.',
+      tags: ['Без залога', 'Возобновляемый'],
+      payment: '45 200',
+      overpay: '542 400'
+    },
+    'Оборудование': {
+      name: 'Инвестиционный кредит',
+      desc: 'На покупку оборудования, транспорта, модернизацию производства',
+      rate: 'от 20%',
+      max: 'до 100 млн',
+      term: 'до 84 мес.',
+      tags: ['С залогом'],
+      payment: '186 500',
+      overpay: '1 703 200'
+    },
+    'Госконтракт': {
+      name: 'Кредит с господдержкой',
+      desc: 'Поручительство Корпорации МСП, залог не нужен',
+      rate: 'от 19,5%',
+      max: 'до 50 млн',
+      term: 'до 36 мес.',
+      tags: ['Без залога', 'Госпрограмма'],
+      payment: '186 200',
+      overpay: '1 703 200'
+    },
+    'Ремонт': {
+      name: 'Инвестиционный кредит',
+      desc: 'На ремонт, открытие новой точки, расширение бизнеса',
+      rate: 'от 21%',
+      max: 'до 30 млн',
+      term: 'до 60 мес.',
+      tags: ['С залогом'],
+      payment: '174 500',
+      overpay: '1 235 000'
+    },
+    'Рефинансирование': {
+      name: 'Рефинансирование',
+      desc: 'Объедините кредиты других банков в один платёж',
+      rate: 'от 18%',
+      max: 'до 30 млн',
+      term: 'до 60 мес.',
+      tags: ['Онлайн'],
+      payment: '148 000',
+      overpay: '648 000'
+    }
+  };
+
+  // Функция добавления сообщения ИИ
+  function addAIMessage(text, isTyping = false) {
+    const msg = document.createElement('div');
+    msg.className = 'chat-bubble flex items-start gap-3';
+    msg.innerHTML = `
+      <div class="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF3124" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="flex-1">
+        <div class="text-sm font-semibold mb-1">Альфа-Ассистент</div>
+        <div class="text-soft ${isTyping ? 'typing' : ''}">${text}</div>
+      </div>
+    `;
+    chatContainer.appendChild(msg);
+    return msg;
+  }
+
+  // Функция добавления вопроса с вариантами
+  function addQuestion(text, options, type = 'buttons') {
+    const msg = document.createElement('div');
+    msg.className = 'chat-bubble ml-11';
+    
+    if (type === 'buttons') {
+      msg.innerHTML = `
+        <div class="text-sm font-medium mb-3">${text}</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2" id="options-${currentStep}">
+          ${options.map((opt, i) => `
+            <button class="option-btn border border-border rounded-xl px-4 py-3 text-sm text-left hover:border-accent transition" data-value="${opt.value}">
+              ${opt.label}
+            </button>
+          `).join('')}
+        </div>
+      `;
+    } else if (type === 'slider') {
+      msg.innerHTML = `
+        <div class="text-sm font-medium mb-3">${text}</div>
+        <div class="bg-bg rounded-xl p-5">
+          <div class="flex items-end justify-between mb-3">
+            <div class="display text-2xl font-bold" id="sliderValue-${currentStep}">${options.format(answers[options.key])}</div>
+          </div>
+          <input type="range" id="slider-${currentStep}" min="${options.min}" max="${options.max}" step="${options.step}" value="${answers[options.key]}" />
+          <div class="flex justify-between text-xs text-muted mt-2">
+            <span>${options.format(options.min)}</span>
+            <span>${options.format(options.max)}</span>
+          </div>
+        </div>
+        <button class="mt-3 bg-accent hover:bg-accentHover text-white font-semibold px-6 py-2.5 rounded-xl transition text-sm" id="confirm-${currentStep}">
+          Подтвердить
+        </button>
+      `;
+    } else if (type === 'yesno') {
+      msg.innerHTML = `
+        <div class="text-sm font-medium mb-3">${text}</div>
+        <div class="flex gap-2">
+          <button class="option-btn flex-1 border border-border rounded-xl px-4 py-3 text-sm text-center hover:border-accent transition" data-value="yes">Да, есть</button>
+          <button class="option-btn flex-1 border border-border rounded-xl px-4 py-3 text-sm text-center hover:border-accent transition" data-value="no">Нет</button>
+          <button class="option-btn flex-1 border border-border rounded-xl px-4 py-3 text-sm text-center hover:border-accent transition" data-value="not-sure">Не уверен</button>
+        </div>
+      `;
+    }
+    
+    chatContainer.appendChild(msg);
+    return msg;
+  }
+
+  // Функция добавления ответа пользователя
+  function addUserAnswer(text) {
+    const msg = document.createElement('div');
+    msg.className = 'chat-bubble flex items-start gap-3 justify-end';
+    msg.innerHTML = `
+      <div class="flex-1 text-right">
+        <div class="inline-block bg-accent/10 border border-accent/20 rounded-xl px-4 py-3 text-sm">${text}</div>
+      </div>
+    `;
+    chatContainer.appendChild(msg);
+  }
+
+  // Шаг 0: Приветствие
+  function step0() {
+    currentStep = 0;
+    addAIMessage('Здравствуйте! Я помогу подобрать кредит под вашу задачу. Ответьте на 4 вопроса — это займёт минуту.');
+    setTimeout(() => {
+      addAIMessage('Для чего вам нужны деньги?');
+      addQuestion('Выберите цель:', [
+        { label: 'Закупка товара', value: 'Оборот' },
+        { label: 'Кассовый разрыв', value: 'Кассовый разрыв' },
+        { label: 'Оборудование', value: 'Оборудование' },
+        { label: 'Госконтракт', value: 'Госконтракт' },
+        { label: 'Ремонт, новая точка', value: 'Ремонт' },
+        { label: 'Рефинансирование', value: 'Рефинансирование' }
+      ]);
+      setupButtonHandlers();
+    }, 500);
+  }
+
+  // Шаг 1: Сумма
+  function step1() {
+    currentStep = 1;
+    currentQEl.textContent = '2';
+    addAIMessage('Понял. Какая сумма вам нужна?');
+    addQuestion('Выберите сумму:', {
+      key: 'amount',
+      min: 100000,
+      max: 30000000,
+      step: 100000,
+      format: (n) => new Intl.NumberFormat('ru-RU').format(n) + ' ₽'
+    }, 'slider');
+    setupSliderHandler();
+  }
+
+  // Шаг 2: Срок
+  function step2() {
+    currentStep = 2;
+    currentQEl.textContent = '3';
+    addAIMessage('Отлично. На какой срок планируете кредит?');
+    addQuestion('Выберите срок:', {
+      key: 'term',
+      min: 1,
+      max: 60,
+      step: 1,
+      format: (n) => n + ' мес.'
+    }, 'slider');
+    setupSliderHandler();
+  }
+
+  // Шаг 3: Залог
+  function step3() {
+    currentStep = 3;
+    currentQEl.textContent = '4';
+    addAIMessage('Хорошо. Последний вопрос: есть ли у вас имущество для залога?');
+    addQuestion('Это поможет подобрать лучшие условия:', [
+      { label: 'Да, есть недвижимость', value: 'real-estate' },
+      { label: 'Да, есть оборудование', value: 'equipment' },
+      { label: 'Нет, без залога', value: 'no' },
+      { label: 'Не уверен', value: 'not-sure' }
+    ]);
+    setupButtonHandlers();
+  }
+
+  // Шаг 4: Результат
+  function step4() {
+    currentStep = 4;
+    currentQEl.textContent = '✓';
+    document.getElementById('skipBtn').style.display = 'none';
+    
+    // Определяем продукт
+    let productKey = answers.goal;
+    if (answers.collateral === 'no' && answers.goal === 'Оборудование') {
+      productKey = 'Госконтракт'; // Альтернатива без залога
+    }
+    
+    const product = products[productKey];
+    
+    addAIMessage('Анализирую ваши ответы...', true);
+    
+    setTimeout(() => {
+      chatContainer.lastChild.remove();
+      addAIMessage(`На основе ваших ответов рекомендую <strong>${product.name}</strong>.`);
+      
+      setTimeout(() => {
+        addAIMessage(`Вот почему это подходит:<br><br>• Цель "${answers.goal}" — этот продукт лучше всего решает такую задачу<br>• Сумма ${new Intl.NumberFormat('ru-RU').format(answers.amount)} ₽ — в пределах лимита<br>• Срок ${answers.term} мес. — оптимальный для вашей ситуации`);
+        
+        setTimeout(() => {
+          showRecommendation(product);
+        }, 500);
+      }, 800);
+    }, 1500);
+  }
+
+  // Показать рекомендацию
+  function showRecommendation(product) {
+    const rec = document.createElement('div');
+    rec.className = 'chat-bubble ml-11 mt-6';
+    rec.innerHTML = `
+      <div class="bg-gradient-to-br from-accent/10 to-transparent border border-accent/30 rounded-2xl p-6">
+        <div class="inline-block text-[10px] bg-accent text-white px-2.5 py-1 rounded-full font-semibold mb-3">РЕКОМЕНДАЦИЯ ИИ</div>
+        <h3 class="display text-2xl font-bold mb-2">${product.name}</h3>
+        <p class="text-sm text-soft mb-4">${product.desc}</p>
+        
+        <div class="grid grid-cols-3 gap-3 mb-4">
+          <div class="bg-bg rounded-xl p-3">
+            <div class="text-xs text-muted mb-1">Ставка</div>
+            <div class="display text-lg font-bold">${product.rate}</div>
+          </div>
+          <div class="bg-bg rounded-xl p-3">
+            <div class="text-xs text-muted mb-1">Сумма</div>
+            <div class="display text-lg font-bold">${product.max}</div>
+          </div>
+          <div class="bg-bg rounded-xl p-3">
+            <div class="text-xs text-muted mb-1">Срок</div>
+            <div class="display text-lg font-bold">${product.term}</div>
+          </div>
+        </div>
+        
+        <div class="flex flex-wrap gap-2 mb-4">
+          ${product.tags.map(t => `<span class="text-xs bg-bg border border-border rounded-full px-3 py-1 text-soft">${t}</span>`).join('')}
+        </div>
+        
+        <div class="bg-bg rounded-xl p-4 mb-4">
+          <div class="flex justify-between text-sm mb-1.5">
+            <span class="text-muted">Платёж в месяц</span>
+            <span class="font-semibold">≈ ${product.payment} ₽</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-muted">Переплата</span>
+            <span class="font-semibold">≈ ${product.overpay} ₽</span>
+          </div>
+        </div>
+        
+        <div class="flex gap-2">
+          <button class="flex-1 bg-accent hover:bg-accentHover text-white font-semibold py-3 rounded-xl transition text-sm">
+            Оформить заявку
+          </button>
+          <button class="flex-1 bg-card hover:bg-cardHover border border-border text-white font-semibold py-3 rounded-xl transition text-sm">
+            Другой продукт
+          </button>
+        </div>
+      </div>
+    `;
+    chatContainer.appendChild(rec);
+    
+    setTimeout(() => {
+      addAIMessage('Если хотите уточнить параметры или посмотреть другие варианты — просто напишите.');
+    }, 500);
+  }
+
+  // Обработчики кнопок
+  function setupButtonHandlers() {
+    const buttons = chatContainer.querySelectorAll(`#options-${currentStep} .option-btn`);
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        
+        const value = btn.dataset.value;
+        const label = btn.textContent.trim();
+        
+        setTimeout(() => {
+          addUserAnswer(label);
+          
+          if (currentStep === 0) {
+            answers.goal = value;
+            setTimeout(step1, 300);
+          } else if (currentStep === 3) {
+            answers.collateral = value;
+            setTimeout(step4, 300);
+          }
+        }, 200);
+      });
+    });
+  }
+
+  // Обработчик ползунка
+  function setupSliderHandler() {
+    const slider = document.getElementById(`slider-${currentStep}`);
+    const valueEl = document.getElementById(`sliderValue-${currentStep}`);
+    const confirmBtn = document.getElementById(`confirm-${currentStep}`);
+    const key = currentStep === 1 ? 'amount' : 'term';
+    const format = currentStep === 1 
+      ? (n) => new Intl.NumberFormat('ru-RU').format(n) + ' ₽'
+      : (n) => n + ' мес.';
+    
+    slider.addEventListener('input', (e) => {
+      const val = +e.target.value;
+      answers[key] = val;
+      valueEl.textContent = format(val);
+    });
+    
+    confirmBtn.addEventListener('click', () => {
+      const val = answers[key];
+      addUserAnswer(format(val));
+      
+      if (currentStep === 1) {
+        setTimeout(step2, 300);
+      } else if (currentStep === 2) {
+        setTimeout(step3, 300);
+      }
+    });
+  }
+
+  // Пропустить квиз
+  skipBtn.addEventListener('click', () => {
+    window.location.href = 'application.html';
+  });
+
+  // Запуск
+  step0();
+</script>
+
+</body>
+</html>

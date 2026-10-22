@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Кредитный конвейер · Менеджер</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#0A0A0A',
+          card: '#141414',
+          cardHover: '#1C1C1C',
+          border: '#262626',
+          accent: '#EF3124',
+          accentHover: '#D62A1F',
+          muted: '#8A8A8A',
+          soft: '#A0A0A0',
+          success: '#22C55E',
+          warning: '#F59E0B',
+          info: '#3B82F6'
+        },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+          display: ['Space Grotesk', 'Inter', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; background: #0A0A0A; color: #fff; }
+  .display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+  .queue-item { transition: all .15s ease; cursor: pointer; }
+  .queue-item:hover { background: #1C1C1C; }
+  .queue-item.active { background: #1A1A1A; border-left: 3px solid #EF3124; }
+  .pulse { animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .fade-in { animation: fadeIn .3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  
+  /* Toast notification */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px;
+    transform: translateY(100px); opacity: 0;
+    transition: all .3s ease; z-index: 100;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<!-- HEADER -->
+<header class="border-b border-border bg-bg/80 backdrop-blur-xl sticky top-0 z-50">
+  <div class="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-8">
+      <div class="w-9 h-9 bg-accent rounded-md flex items-center justify-center font-display font-bold text-white text-xl">А</div>
+      <div class="hidden md:flex items-center gap-6 text-sm">
+        <span class="text-white font-semibold">Кредитный конвейер · менеджер</span>
+        <span class="text-muted">|</span>
+        <a href="#" class="text-white">Очередь</a>
+        <a href="#" class="text-soft hover:text-white transition">Все заявки</a>
+        <a href="#" class="text-soft hover:text-white transition">Отчёты</a>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 text-sm text-soft">
+        <div class="w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center text-xs font-semibold text-white">АК</div>
+        <span class="hidden sm:inline">Анна К.</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN LAYOUT -->
+<main class="flex-1 flex max-w-[1600px] mx-auto w-full">
+
+  <!-- ЛЕВАЯ ПАНЕЛЬ: ОЧЕРЕДЬ -->
+  <aside class="w-full md:w-[380px] border-r border-border flex flex-col h-[calc(100vh-64px)] sticky top-16">
+    <div class="p-6 border-b border-border flex items-center justify-between">
+      <div>
+        <div class="text-xs uppercase tracking-wider text-muted mb-1">Очередь на решение</div>
+        <div class="display text-2xl font-bold">4 заявки</div>
+      </div>
+      <button class="text-xs text-soft hover:text-white border border-border rounded-lg px-3 py-1.5 transition">Фильтры</button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto">
+      <!-- Заявка 1 (Срочная) -->
+      <div class="queue-item active p-5 border-b border-border" data-id="1">
+        <div class="flex items-start justify-between mb-2">
+          <div class="font-semibold text-sm">ООО «ТехноСнаб»</div>
+          <div class="text-xs text-accent font-semibold pulse flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+            Осталось 6 мин
+          </div>
+        </div>
+        <div class="text-xs text-soft mb-3">Оборотный кредит · 12 000 000 ₽</div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] bg-warning/10 text-warning border border-warning/20 rounded px-2 py-0.5 font-semibold">Грейд C · 583</span>
+          <span class="text-[10px] text-muted">Авто-лимит превышен</span>
+        </div>
+      </div>
+
+      <!-- Заявка 2 -->
+      <div class="queue-item p-5 border-b border-border" data-id="2">
+        <div class="flex items-start justify-between mb-2">
+          <div class="font-semibold text-sm">Мельников ИП</div>
+          <div class="text-xs text-warning font-semibold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-warning"></span>
+            Осталось 2 ч
+          </div>
+        </div>
+        <div class="text-xs text-soft mb-3">Экспресс-кредит · 2 400 000 ₽</div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] bg-success/10 text-success border border-success/20 rounded px-2 py-0.5 font-semibold">Грейд A · 812</span>
+          <span class="text-[10px] text-muted">Авто-одобрение</span>
+        </div>
+      </div>
+
+      <!-- Заявка 3 -->
+      <div class="queue-item p-5 border-b border-border" data-id="3">
+        <div class="flex items-start justify-between mb-2">
+          <div class="font-semibold text-sm">Соколова ИП</div>
+          <div class="text-xs text-soft font-semibold">Осталось 5 ч</div>
+        </div>
+        <div class="text-xs text-soft mb-3">Кредит с господдержкой · 1 500 000 ₽</div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] bg-success/10 text-success border border-success/20 rounded px-2 py-0.5 font-semibold">Грейд B · 720</span>
+          <span class="text-[10px] text-muted">Ждёт проверки ФНС</span>
+        </div>
+      </div>
+
+      <!-- Заявка 4 -->
+      <div class="queue-item p-5 border-b border-border" data-id="4">
+        <div class="flex items-start justify-between mb-2">
+          <div class="font-semibold text-sm">ООО «СтройМастер»</div>
+          <div class="text-xs text-soft font-semibold">Осталось 8 ч</div>
+        </div>
+        <div class="text-xs text-soft mb-3">Инвестиционный · 25 000 000 ₽</div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] bg-info/10 text-info border border-info/20 rounded px-2 py-0.5 font-semibold">Грейд B · 690</span>
+          <span class="text-[10px] text-muted">Требует залога</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ПРАВАЯ ПАНЕЛЬ: КАРТОЧКА ЗАЯВКИ -->
+  <section class="flex-1 p-8 overflow-y-auto h-[calc(100vh-64px)]">
+    <div class="max-w-4xl mx-auto fade-in" id="applicationCard">
+      
+      <!-- Заголовок заявки -->
+      <div class="flex items-start justify-between mb-8 flex-wrap gap-4">
+        <div>
+          <div class="text-xs uppercase tracking-wider text-muted mb-2">Заявка № 2026-0148 · требует ручного решения</div>
+          <h1 class="display text-3xl md:text-4xl font-bold mb-2">ООО «ТехноСнаб»</h1>
+          <p class="text-soft">Оборотный кредит · <span class="text-white font-semibold">12 000 000 ₽</span> на 24 мес.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="bg-card border border-border rounded-xl px-4 py-3 text-center">
+            <div class="text-xs text-muted mb-1">Грейд</div>
+            <div class="display text-xl font-bold text-warning">C</div>
+          </div>
+          <div class="bg-card border border-border rounded-xl px-4 py-3 text-center">
+            <div class="text-xs text-muted mb-1">Балл скоринга</div>
+            <div class="display text-xl font-bold">583<span class="text-xs text-muted">/1000</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Быстрые факты -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        <div class="bg-card border border-border rounded-xl p-4">
+          <div class="text-xs text-muted mb-1">ЕГРЮЛ</div>
+          <div class="text-sm font-semibold flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+            Действующая
+          </div>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-4">
+          <div class="text-xs text-muted mb-1">ФНС</div>
+          <div class="text-sm font-semibold flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+            Долгов нет
+          </div>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-4">
+          <div class="text-xs text-muted mb-1">БКИ</div>
+          <div class="text-sm font-semibold flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-warning"></span>
+            Просрочка 3 дня (год назад)
+          </div>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-4">
+          <div class="text-xs text-muted mb-1">Обороты</div>
+          <div class="text-sm font-semibold flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+            Стабильны
+          </div>
+        </div>
+      </div>
+
+      <!-- Вклад факторов -->
+      <div class="bg-card border border-border rounded-2xl p-6 mb-6">
+        <h2 class="display text-xl font-bold mb-5">Вклад факторов в балл</h2>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-border">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-bg border border-border flex items-center justify-center text-xs font-semibold text-muted">01</div>
+              <div>
+                <div class="text-sm font-medium">Стартовый балл</div>
+                <div class="text-xs text-muted">Малый бизнес, базовый грейд</div>
+              </div>
+            </div>
+            <div class="display text-lg font-bold">560</div>
+          </div>
+          
+          <div class="flex items-center justify-between pb-3 border-b border-border">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-bg border border-border flex items-center justify-center text-xs font-semibold text-muted">02</div>
+              <div>
+                <div class="text-sm font-medium">Возраст бизнеса</div>
+                <div class="text-xs text-muted">6 лет на рынке</div>
+              </div>
+            </div>
+            <div class="display text-lg font-bold text-success">+25</div>
+          </div>
+
+          <div class="flex items-center justify-between pb-3 border-b border-border">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-bg border border-border flex items-center justify-center text-xs font-semibold text-muted">03</div>
+              <div>
+                <div class="text-sm font-medium">Техническая просрочка</div>
+                <div class="text-xs text-muted">3 дня, 12 месяцев назад</div>
+              </div>
+            </div>
+            <div class="display text-lg font-bold text-accent">−23</div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-bg border border-border flex items-center justify-center text-xs font-semibold text-muted">04</div>
+              <div>
+                <div class="text-sm font-medium">Открытый счёт в банке</div>
+                <div class="text-xs text-muted">2 года, стабильные обороты</div>
+              </div>
+            </div>
+            <div class="display text-lg font-bold text-success">+21</div>
+          </div>
+
+          <div class="flex items-center justify-between pt-4 border-t border-border mt-4">
+            <div class="text-sm font-semibold">Итоговый балл скоринга</div>
+            <div class="display text-2xl font-bold">583 <span class="text-sm text-muted font-normal">/ 1000</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Резюме от ИИ -->
+      <div class="bg-gradient-to-br from-accent/5 to-transparent border border-accent/20 rounded-2xl p-6 mb-8 relative">
+        <div class="absolute top-4 right-4 flex items-center gap-1.5 text-[10px] text-accent font-semibold uppercase tracking-wider">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          AI Summary
+        </div>
+        <h2 class="display text-xl font-bold mb-3">Резюме для менеджера</h2>
+        <p class="text-soft text-sm leading-relaxed mb-4">
+          Оптовая компания, 6 лет на рынке, стабильные обороты. Единственный минус — техническая просрочка 3 дня год назад. Запрашиваемая сумма выше авто-лимита для этого грейда. 
+        </p>
+        <p class="text-white text-sm font-medium mb-4">
+          Рекомендация системы: контрпредложение 8 млн ₽ или 12 млн ₽ с поручительством собственника.
+        </p>
+        <div class="text-[11px] text-muted italic">
+          Сгенерировано локальной моделью (Qwen2.5) на основе факторов скоринга. Не является автоматическим решением.
+        </div>
+      </div>
+
+      <!-- Кнопки действий -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <button onclick="showToast('Заявка одобрена. Клиент уведомлён.', 'success')" class="bg-success hover:bg-green-600 text-white font-semibold py-3.5 rounded-xl transition text-sm">
+          Одобрить
+        </button>
+        <button onclick="showToast('Открыта форма контр-предложения.', 'info')" class="bg-accent hover:bg-accentHover text-white font-semibold py-3.5 rounded-xl transition text-sm">
+          Контрпредложение
+        </button>
+        <button onclick="showToast('Запрос на документы отправлен клиенту.', 'warning')" class="bg-card hover:bg-cardHover border border-border text-white font-semibold py-3.5 rounded-xl transition text-sm">
+          Запросить документы
+        </button>
+        <button onclick="showToast('Отказ зафиксирован. Причина выбрана.', 'error')" class="bg-card hover:bg-cardHover border border-border text-soft hover:text-white font-semibold py-3.5 rounded-xl transition text-sm">
+          Отказать с причиной
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast" class="bg-card border border-border rounded-xl p-4 shadow-2xl flex items-center gap-3 min-w-[300px]">
+  <div id="toastIcon" class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"></div>
+  <div id="toastText" class="text-sm"></div>
+</div>
+
+<script>
+  // Переключение заявок в очереди
+  const queueItems = document.querySelectorAll('.queue-item');
+  queueItems.forEach(item => {
+    item.addEventListener('click', () => {
+      queueItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      // В реальном приложении здесь был бы fetch данных заявки
+    });
+  });
+
+  // Toast уведомления для кнопок действий
+  function showToast(message, type = 'info') {
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toastText');
+    const toastIcon = document.getElementById('toastIcon');
+    
+    toastText.textContent = message;
+    
+    const colors = {
+      success: { bg: 'bg-success/10', text: 'text-success', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' },
+      info: { bg: 'bg-info/10', text: 'text-info', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>' },
+      warning: { bg: 'bg-warning/10', text: 'text-warning', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><path d="M12 9v4M12 17h.01"/></svg>' },
+      error: { bg: 'bg-accent/10', text: 'text-accent', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF3124" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' }
+    };
+    
+    const c = colors[type];
+    toastIcon.className = `w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${c.bg}`;
+    toastIcon.innerHTML = c.icon;
+    
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+</script>
+
+</body>
+</html>

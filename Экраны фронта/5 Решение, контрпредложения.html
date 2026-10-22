@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Решение по заявке · Кредитный кабинет</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#0A0A0A',
+          card: '#141414',
+          cardHover: '#1C1C1C',
+          border: '#262626',
+          accent: '#EF3124',
+          accentHover: '#D62A1F',
+          muted: '#8A8A8A',
+          soft: '#A0A0A0',
+          success: '#22C55E',
+          warning: '#F59E0B',
+          info: '#3B82F6'
+        },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+          display: ['Space Grotesk', 'Inter', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; background: #0A0A0A; color: #fff; }
+  .display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+  .offer-card { transition: all .2s ease; cursor: pointer; }
+  .offer-card:hover { border-color: #3a3a3a; transform: translateY(-2px); }
+  .offer-card.selected { border-color: #EF3124; background: #1a1a1a; }
+  .offer-card.recommended { border-color: #EF3124; }
+  .fade-in { animation: fadeIn .3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- HEADER -->
+<header class="border-b border-border sticky top-0 bg-bg/80 backdrop-blur-xl z-50">
+  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-10">
+      <div class="w-9 h-9 bg-accent rounded-md flex items-center justify-center font-display font-bold text-white text-xl">А</div>
+      <nav class="hidden md:flex items-center gap-7 text-sm text-soft">
+        <a href="index.html" class="hover:text-white transition">Главная</a>
+        <a href="#" class="hover:text-white transition">Кредиты</a>
+        <a href="#" class="text-white">Заявки</a>
+        <a href="#" class="hover:text-white transition">Деньги бизнеса</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="hidden sm:flex items-center gap-2 text-sm text-soft">
+        <div class="w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center text-xs font-semibold">ХД</div>
+        <span>ООО «Хлебный двор»</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="max-w-6xl mx-auto px-6 py-12">
+
+  <!-- Заголовок -->
+  <div class="mb-10">
+    <div class="inline-flex items-center gap-2 bg-accent/10 text-accent rounded-full px-4 py-1.5 text-xs font-semibold mb-4">
+      <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      Решение готово
+    </div>
+    <h1 class="display text-4xl md:text-5xl font-bold mb-3">
+      Мы не можем одобрить 5 000 000 ₽,<br/>
+      <span class="text-soft">но готовы предложить</span>
+    </h1>
+    <p class="text-soft">Предложения действуют 7 дней · до 29.10.2026</p>
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-6">
+
+    <!-- ЛЕВАЯ КОЛОНКА: Варианты -->
+    <div class="lg:col-span-2 space-y-4">
+
+      <!-- Вариант 1: Рекомендуемый -->
+      <div class="offer-card recommended bg-card border-2 border-accent rounded-2xl p-6 fade-in" data-offer="1">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <div class="inline-block text-[10px] bg-accent text-white px-2.5 py-1 rounded-full font-semibold mb-2">РЕКОМЕНДУЕМ</div>
+            <h3 class="display text-2xl font-bold">3 000 000 ₽ на 24 мес.</h3>
+          </div>
+          <div class="text-right">
+            <div class="text-xs text-muted mb-1">Платёж</div>
+            <div class="display text-xl font-bold text-accent">157 100 ₽</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mb-4">
+          <div>
+            <div class="text-xs text-muted mb-1">Ставка</div>
+            <div class="font-semibold">23%</div>
+          </div>
+          <div>
+            <div class="text-xs text-muted mb-1">Переплата</div>
+            <div class="font-semibold">770 800 ₽</div>
+          </div>
+          <div>
+            <div class="text-xs text-muted mb-1">ПСК</div>
+            <div class="font-semibold">25,6%</div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xs bg-success/10 text-success border border-success/20 rounded-full px-3 py-1 font-medium">✓ Без залога</span>
+          <span class="text-xs bg-success/10 text-success border border-success/20 rounded-full px-3 py-1 font-medium">✓ Решение уже принято</span>
+        </div>
+
+        <button class="w-full bg-accent hover:bg-accentHover text-white font-semibold py-3.5 rounded-xl transition">
+          Принять предложение
+        </button>
+      </div>
+
+      <!-- Вариант 2: С господдержкой -->
+      <div class="offer-card bg-card border border-border rounded-2xl p-6 fade-in" data-offer="2">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <div class="inline-block text-[10px] bg-info/10 text-info border border-info/20 rounded-full px-2.5 py-1 font-semibold mb-2">С ГОСПОДДЕРЖКОЙ</div>
+            <h3 class="display text-2xl font-bold">5 000 000 ₽ на 36 мес.</h3>
+          </div>
+          <div class="text-right">
+            <div class="text-xs text-muted mb-1">Платёж</div>
+            <div class="display text-xl font-bold">186 200 ₽</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mb-4">
+          <div>
+            <div class="text-xs text-muted mb-1">Ставка</div>
+            <div class="font-semibold">19,5%</div>
+          </div>
+          <div>
+            <div class="text-xs text-muted mb-1">Переплата</div>
+            <div class="font-semibold">1 703 200 ₽</div>
+          </div>
+          <div>
+            <div class="text-xs text-muted mb-1">ПСК</div>
+            <div class="font-semibold">23,1%</div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xs bg-bg border border-border rounded-full px-3 py-1 text-soft">С поручительством Корпорации МСП</span>
+          <span class="text-xs bg-bg border border-border rounded-full px-3 py-1 text-soft">Ответ до 2 дней</span>
+        </div>
+
+        <button class="w-full bg-white text-bg font-semibold py-3.5 rounded-xl hover:bg-gray-200 transition">
+          Выбрать этот вариант
+        </button>
+      </div>
+
+      <!-- Вариант 3: С обеспечением -->
+      <div class="offer-card bg-card border border-border rounded-2xl p-6 fade-in" data-offer="3">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <div class="inline-block text-[10px] bg-warning/10 text-warning border border-warning/20 rounded-full px-2.5 py-1 font-semibold mb-2">С ОБЕСПЕЧЕНИЕМ</div>
+            <h3 class="display text-2xl font-bold">4 000 000 ₽ на 30 мес.</h3>
+          </div>
+          <div class="text-right">
+            <div class="text-xs text-muted mb-1">Платёж</div>
+            <div class="display text-xl font-bold">174 500 ₽</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mb-4">
+          <div>
+            <div class="text-xs text-muted mb-1">Ставка</div>
+            <div class="font-semibold">20%</div>
+          </div>
+          <div>
+            <div class="text-xs text-muted mb-1">Переплата</div>
+            <div class="font-semibold">1 235 000 ₽</div>
+          </div>
+          <div>
+            <div class="text-xs text-muted mb-1">ПСК</div>
+            <div class="font-semibold">22,8%</div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xs bg-bg border border-border rounded-full px-3 py-1 text-soft">Под залог оборудования пекарни</span>
+        </div>
+
+        <button class="w-full bg-white text-bg font-semibold py-3.5 rounded-xl hover:bg-gray-200 transition">
+          Выбрать этот вариант
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ПРАВАЯ КОЛОНКА: Объяснение -->
+    <div class="space-y-6">
+
+      <!-- Почему такое решение -->
+      <div class="bg-card border border-border rounded-2xl p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF3124" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          </div>
+          <h3 class="display text-lg font-bold">Почему такое решение</h3>
+        </div>
+
+        <div class="space-y-3 text-sm">
+          <div class="flex items-start gap-3">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0"></div>
+            <p class="text-soft">Сейчас на платежи по кредитам уходит <span class="text-white font-semibold">62% свободных денег бизнеса</span> — это много для суммы 5 млн.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0"></div>
+            <p class="text-soft">За последний месяц было <span class="text-white font-semibold">4 запроса в другие банки</span>.</p>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-border">
+          <div class="text-xs text-muted mb-2">Факторы скоринга</div>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-soft">Возраст бизнеса (4 года)</span>
+              <span class="text-success font-semibold">+25 баллов</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-soft">Долговая нагрузка (62%)</span>
+              <span class="text-accent font-semibold">−180 баллов</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-soft">Запросы в БКИ (4 за месяц)</span>
+              <span class="text-accent font-semibold">−40 баллов</span>
+            </div>
+            <div class="flex items-center justify-between text-xs pt-2 border-t border-border">
+              <span class="text-soft">Итоговый балл</span>
+              <span class="display font-bold">583 / 1000</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Что поможет увеличить лимит -->
+      <div class="bg-card border border-border rounded-2xl p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-success/10 flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h3 class="display text-lg font-bold">Что поможет увеличить лимит</h3>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0 text-xs font-bold text-success">1</div>
+            <p class="text-sm text-soft">Погасите мелкие кредиты, и нагрузка снизится.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0 text-xs font-bold text-success">2</div>
+            <p class="text-sm text-soft">Вернитесь через 3 месяца: мы пересчитаем лимит автоматически.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Дисклеймер -->
+      <div class="bg-bg border border-border rounded-xl p-4">
+        <p class="text-xs text-muted leading-relaxed">
+          Текст сформирован по фактам расчёта; цифры не придумываются. Решение принято на основе данных скоринга и кредитной политики банка.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+  // Интерактивность: выделение выбранного варианта
+  const offerCards = document.querySelectorAll('.offer-card');
+  offerCards.forEach(card => {
+    card.addEventListener('click', () => {
+      offerCards.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    });
+  });
+</script>
+
+</body>
+</html>
