@@ -213,5 +213,6 @@ if __name__ == "__main__":
         d = decide(app, company, bki, product_rate=22.0)
         print(f"{name}: {r.score} ({r.grade}) -> {d.status}")
         for o in d.offers:
-            print(f"   {o.kind}: {o.amount:,} ₽ на {o.term_months} мес. под {o.rate}%: "
-                  f"платёж {o.monthly_payment:,} ₽, переплата {o.overpayment:,} ₽".replace(",", " "))
+            rub = lambda x: f"{x:,}".replace(",", " ")
+            print(f"   {o.kind}: {rub(o.amount)} ₽ на {o.term_months} мес. под {o.rate}%: "
+                  f"платёж {rub(o.monthly_payment)} ₽, переплата {rub(o.overpayment)} ₽")
