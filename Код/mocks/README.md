@@ -69,8 +69,12 @@ docker compose up -d mocks
 curl http://localhost:8089/egrul/v1/companies/7703168426
 curl http://localhost:8089/egrul/v1/companies/7718046237
 curl http://localhost:8089/fns/v1/companies/7704983159/finance
-curl -X POST http://localhost:8089/bki/v1/reports -H "Content-Type: application/json" -d '{"inn":"7703168426","consentId":"demo"}'
-curl -X POST http://localhost:8089/bki/v1/reports -H "Content-Type: application/json" -d '{"inn":"7703168426"}'
+curl -X POST http://localhost:8089/bki/v1/reports \
+  -H "Content-Type: application/json" \
+  -d '{"inn":"7703168426","consentId":"demo"}'
+curl -X POST http://localhost:8089/bki/v1/reports \
+  -H "Content-Type: application/json" \
+  -d '{"inn":"7703168426"}'
 curl http://localhost:8089/bank/v1/clients/7704983159
 ```
 
