@@ -1,3 +1,7 @@
+<picture><source media="(prefers-color-scheme: dark)" srcset="assets/portfolio-dark.svg"><img src="assets/portfolio-light.svg" width="100%" alt="Vibe Security · Материалы"></picture>
+
+[Профиль](https://github.com/antonshkelll) · [Портфолио](https://antonshkel.ru)
+
 # Vibe Security: материалы к «Умному кредитному кабинету»
 
 Рабочие материалы команды Vibe Security для Альфа-Будущее Хакатона 2026, трек «Умный кредитный кабинет предпринимателя». Дедлайн 26.10 вечером.
